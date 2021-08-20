@@ -12,6 +12,7 @@ export default function Cars() {
     let [year, setYear] = useState('');
     let [carId, setCarId] = useState(null);
     let [car, setCar] = useState(null);
+    let [flag, setFlag] = useState(false);
     useEffect(() => {
         getCars().then(value => {
                 setCars([...value])
@@ -21,13 +22,15 @@ export default function Cars() {
                 setCarId(value[0].id)
             }
         );
-    }, []);
+    }, [flag]);
     let deleteCar = (id) => {
         deleteCarAPI(id).then(value => console.log(value));
         let filterCarsArray = cars.filter(value => value.id !== id);
         setCars([...filterCarsArray]);
     };
     let editCar = (id) => {
+        updateCar();
+        setFlag(!flag);
         let carFind = cars.find(value => value.id === id);
         console.log(carFind);
         setModel(carFind.model)
@@ -35,6 +38,7 @@ export default function Cars() {
         setYear(carFind.year)
         setCarId(carFind.id);
         setCar(carFind);
+
     }
     const updateCar = () => {
        let item = {model, price, year};
@@ -49,9 +53,6 @@ export default function Cars() {
     }
     const onSubmitForm = (e) => {
         e.preventDefault();
-        // let newData = [...cars];
-        // newData.splice()
-        // newData.unshift(car);
         updateCar().then(value => setCars([...cars]));
     }
     const onInputChangeModel = (e) => {
